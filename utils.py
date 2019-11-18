@@ -118,8 +118,8 @@ class CustomOneHotEncoder(BaseEstimator, TransformerMixin):
         self._is_fitted = False
 
     def transform(self, df):
-        X = df.copy()
-        return pd.get_dummies(X, drop_first = True)
+        if self._is_fitted:
+            return pd.get_dummies(df, drop_first=True)
 
     def fit(self, *_):
         self._is_fitted = True

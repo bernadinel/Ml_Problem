@@ -19,3 +19,5 @@ def main():
 
 if __name__ == "__main__":
     to_show = main()
+    print(to_show)
+    to_show.to_csv(r"C:\Users\Dell\Documents\COURS_TAF\Data\Perso\Loan_prediction\test_generic_ml.csv", index=False)
