@@ -6,9 +6,10 @@ from xgboost.sklearn import XGBClassifier, XGBRegressor
 from sklearn.linear_model import ElasticNet, LogisticRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.model_selection import GridSearchCV
-from utils import LabelEncodingColumns, CustomImputer, CustomOneHotEncoder
+from utils import LabelEncodingColumns, CustomImputer, CustomOneHotEncoder, scoring_for_kind
 
 
 class Model:
@@ -97,17 +98,17 @@ class Model:
         else:
             return -1
 
-    def processing(self, scoring_optimization=None, cv=3):
+    def processing(self, scoring_optimization=None, cv=4):
         config = self.config
-        resultat_model = {"cv_results": {}, "best_estimator": {}, "performance_of_best_estimator": {}, "y_predit": {},
-                          "scorer": {}, "scoring": {}}
+        resultat_model = {"cv_results": {}, "best_estimator": {}, "performance_model": {}, "y_test": {},
+                          "metrics":{}}
+
         self.num_col = self.X_train.select_dtypes(exclude=[object]).columns.tolist()
         self.cat_col = self.X_train.select_dtypes(include=[object]).columns.tolist()
         imput = CustomImputer()
         X_train = imput.fit_transform(self.X_train)
         X_test = imput.transform(self.X_test)
-
-
+        X_train_bis, X_valid, y_train_bis, y_valid = train_test_split(X_train, self.y_train, test_size=0.2, random_state=42)
         for nom_algo in config.columns.tolist():
 
             kind = config.loc["_kind", nom_algo]
@@ -115,13 +116,17 @@ class Model:
 
             pipe_final = Pipeline([self.get_preprocessing_for_the_model_kind(kind), config.loc["_pipeSteps", nom_algo]])
             cv_tmp = GridSearchCV(pipe_final, param_grid=tmp_grid, scoring=scoring_optimization, cv=cv, n_jobs=-1, return_train_score= True)
-            cv_tmp.fit(X_train, self.y_train)
+            cv_tmp.fit(X_train_bis, y_train_bis)
+            y_valid_pred = cv_tmp.predict(X_valid)
             resultat_model["cv_results"][nom_algo] = cv_tmp.cv_results_
             resultat_model["best_estimator"][nom_algo] = cv_tmp.best_estimator_
-            resultat_model["performance_of_best_estimator"][nom_algo] = cv_tmp.best_score_
-            resultat_model["scorer"][nom_algo] = cv_tmp.scorer_
-            resultat_model["scoring"][nom_algo] = cv_tmp.scoring
-            y_pred = cv_tmp.predict(X_test)
-            resultat_model["y_predit"][nom_algo] = y_pred
-
-        return pd.DataFrame(resultat_model)
+            resultat_model["performance_model"][nom_algo] = cv_tmp.best_score_
+            scoring_bool = True
+            for score, score_function in scoring_for_kind(kind):
+                if scoring_bool:
+                    resultat_model["metrics"][nom_algo] = []
+                    scoring_bool = False
+                resultat_model["metrics"][nom_algo].append([score, score_function(y_valid, y_valid_pred)])
+            y_test = cv_tmp.predict(X_test)
+            resultat_model["y_test"][nom_algo] = y_test
+        return pd.DataFrame(resultat_model, index=config.columns.tolist())

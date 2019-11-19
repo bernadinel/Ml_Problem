@@ -3,9 +3,11 @@ import pandas as pd
 
 
 class MlProblem:
-    def __init__(self, name, path_train="", path_test="", id_col="", cible_col=""):
+    def __init__(self, name, type_ml, path_train="", path_test="", id_col="", cible_col=""):
         if os.path.exists(path_train) & os.path.exists(path_test):
             self.name = name
+            assert type_ml in ["r", "clf"], "Must be Regression (r) or Classification (clf)"
+            self.type_ml = type_ml
             self.train_set_path = path_train
             self.test_set_path = path_test
             self.df_train = self.get_train_set_from_path()
