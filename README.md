@@ -1,4 +1,4 @@
-#Automatic Machine Learning solver
+# Automatic Machine Learning solver
 > A maching learning problem solver for typical kaggle datasets. (ie. with a trainset and a testset)
 
 
