@@ -1,10 +1,11 @@
 import pandas as pd
+import os
 import model
 import ml
 
 
-def main():
-    _pb = ml.MlProblem(name="Loan Prediction", type_ml="clf",
+def main(output_dir=""):
+    _pb = ml.MlProblem(name="Loan_Prediction", type_ml="clf",
                             path_train=r"C:\Users\Dell\Documents\COURS_TAF\Data\Perso\Loan_prediction\train_ctrUa4K.csv"
                             , path_test=r"C:\Users\Dell\Documents\COURS_TAF\Data\Perso\Loan_prediction\test_lAUu6dG.csv"
                             , id_col="Loan_ID", cible_col="Loan_Status")
@@ -15,10 +16,8 @@ def main():
     _model.set_model_and_params_for_ml()
     _model.set_model_config()
     res = _model.processing()
-    return res
+    res.to_csv(os.path.join(output_dir, "ml_result_" + _pb.name + ".csv"))
 
 
 if __name__ == "__main__":
-    to_show = main()
-    print(to_show)
-    to_show.to_csv(r"C:\Users\Dell\Documents\COURS_TAF\Data\Perso\Loan_prediction\test_generic_ml.csv")
+    main(r"C:\Users\Dell\Documents\COURS_TAF\Data\Perso\Loan_prediction")
