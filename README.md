@@ -15,7 +15,7 @@
 The Automatic Machine Learning solver has the goal to give you quick insight about your Machine Learning problem.
 It's give you 3 "clean" quick and dirty models, and them benchmarks scores. With that insights, you can have a best estimation of the performance you can achieve, and what kind of models work better. (Linear, boosting, or bagging) 
 ## Screenshots
-![Example screenshot](img/output.png)
+![](img/output.png)
 
 ## Technologies
 > * python - Version 3.7
@@ -29,7 +29,7 @@ The code was tested and adapted for these dependencies.
 List of features ready
 * Missing Values handling
 * Categorial features handling for each kind of model
-* Opitmization of each model by GridSearch
+* Optimization of each model by GridSearch
 * Model evaluation (train and valid set)
 
 
