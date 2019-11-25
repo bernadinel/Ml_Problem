@@ -15,7 +15,7 @@
 The Automatic Machine Learning solver has the goal to give you quick insight about your Machine Learning problem.
 It's give you 3 "clean" quick and dirty models, and them benchmarks scores. With that insights, you can have a best estimation of the performance you can achieve, and what kind of models work better. (Linear, boosting, or bagging) 
 ## Screenshots
-![](img/output.png)
+![](img/output.PNG)
 
 ## Technologies
 > * python - Version 3.7
