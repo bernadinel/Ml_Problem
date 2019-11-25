@@ -39,7 +39,7 @@ To-do list:
 
 ## Run
 
-Go to the [main.py](https://github.com/bernadinel/Ml_Problem/main.py) script and precise every argument of the main function:
+Go to the [main.py](https://github.com/bernadinel/Ml_Problem/blob/master/main.py) script and precise every argument of the main function:
 + output_dir: Where the result should be stored
 + name: The name of the problem to solve
 + type_ml: The type of Machine Learning problem: Classification 'clf' or Regression 'r'
